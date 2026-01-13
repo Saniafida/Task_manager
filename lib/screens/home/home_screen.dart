@@ -475,9 +475,22 @@ class _HomeScreenState extends State<HomeScreen> {
               final task = recentTasks[index];
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                leading: Icon(
-                  task.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-                  color: task.isCompleted ? AppColors.success : (isDark ? AppColors.white.withOpacity(0.5) : Colors.grey),
+                leading: Checkbox(
+                  value: task.isCompleted,
+                  onChanged: (value) {
+                    if (value != null) {
+                      taskProvider.toggleTaskCompletion(task.id);
+                    }
+                  },
+                  activeColor: AppColors.success,
+                  checkColor: AppColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  side: BorderSide(
+                    color: isDark ? AppColors.white.withOpacity(0.5) : Colors.grey,
+                    width: 2,
+                  ),
                 ),
                 title: Text(
                   task.title,

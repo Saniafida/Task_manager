@@ -35,4 +35,35 @@ class TaskProvider extends ChangeNotifier {
     _tasks.removeWhere((t) => t.id == id);
     notifyListeners();
   }
+
+  // Toggle task completion status
+  Future<void> toggleTaskCompletion(String taskId) async {
+    try {
+      // Find the task index
+      final taskIndex = _tasks.indexWhere((task) => task.id == taskId);
+      if (taskIndex == -1) return;
+
+      // Get the task and toggle its completion status
+      final task = _tasks[taskIndex];
+      final updatedTask = TaskModel(
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        dueDate: task.dueDate,
+        isCompleted: !task.isCompleted, // Toggle completion
+        projectId: task.projectId,
+      );
+
+      // Update in the service/database
+      await _taskService.updateTask(updatedTask);
+
+      // Update in local list
+      _tasks[taskIndex] = updatedTask;
+      notifyListeners();
+    } catch (e) {
+      print('Error toggling task completion: $e');
+      // Optionally show error to user
+      rethrow;
+    }
+  }
 }
